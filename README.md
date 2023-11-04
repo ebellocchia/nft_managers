@@ -92,6 +92,8 @@ Hardhat is configured with the following networks:
 The API keys, RPC nodes and mnemonic shall be configured in the `.env` file.\
 You may need to modify the gas limit and price in the Hardhat configuration file for some networks (e.g. Polygon), to successfully execute the transactions (you'll get a gas error).
 
+## Functions
+
 ### Common functions
 
 Functions implemented by all contracts.
