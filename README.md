@@ -92,9 +92,9 @@ Hardhat is configured with the following networks:
 The API keys, RPC nodes and mnemonic shall be configured in the `.env` file.\
 You may need to modify the gas limit and price in the Hardhat configuration file for some networks (e.g. Polygon), to successfully execute the transactions (you'll get a gas error).
 
-## Functions
+# Functions
 
-### Common functions
+## Common functions
 
 Functions implemented by all contracts.
 
@@ -129,7 +129,7 @@ In order to implement the function, the contract should derive the `IERC20Receiv
 
 The function can be only called by the owner.
 
-### "NftsSeller" functions
+## "NftsSeller" functions
 
     function createERC721Sale(
         IERC721 nftContract_,
@@ -229,7 +229,7 @@ ___
 
 Get if the token sale with address `nftContract_` and ID `nftId_` is active.
 
-### "NftsRedeemer" functions
+## "NftsRedeemer" functions
 
     function createERC721Redeem(
         address redeemer_,
@@ -323,7 +323,7 @@ ___
 
 Get if the redeem for the token with address `nftContract_` and ID `nftId_` is active.
 
-### "NftsAuction" functions
+## "NftsAuction" functions
 
     function createERC721Auction(
         IERC721 nftContract_,
