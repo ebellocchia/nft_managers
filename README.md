@@ -1,4 +1,8 @@
-# Introduction
+# NFT Managers
+[![Build](https://github.com/ebellocchia/nft_managers/actions/workflows/build.yml/badge.svg)](https://github.com/ebellocchia/nft_managers/actions/workflows/build.yml)
+[![Test](https://github.com/ebellocchia/nft_managers/actions/workflows/test.yml/badge.svg)](https://github.com/ebellocchia/nft_managers/actions/workflows/test.yml)
+
+## Introduction
 
 The package contains 3 smart contracts:
 
@@ -8,19 +12,19 @@ The package contains 3 smart contracts:
 
 Each smart contract is upgradeable using a UUPS proxy, so it's deployed together with a `ERC1967Proxy` proxy contract.
 
-# Setup
+## Setup
 
 Install `yarn` if not installed:
 
     npm install -g yarn
 
-## Install package
+### Install package
 
 Simply run:
 
     npm i --include=dev
 
-## Compile
+### Compile
 
 - To compile the contract:
 
@@ -30,7 +34,7 @@ Simply run:
 
         yarn recompile
 
-## Run tests
+### Run tests
 
 - To run tests without coverage:
 
@@ -40,7 +44,7 @@ Simply run:
 
         yarn coverage
 
-## Deploy
+### Deploy
 
 - To deploy all contracts:
 
@@ -74,7 +78,7 @@ Simply run:
 
         yarn deploy-test-tokens <NETWORK> --erc20-supply <ERC20_SUPPLY>
 
-## Configuration
+### Configuration
 
 Hardhat is configured with the following networks:
 
@@ -92,9 +96,9 @@ Hardhat is configured with the following networks:
 The API keys, RPC nodes and mnemonic shall be configured in the `.env` file.\
 You may need to modify the gas limit and price in the Hardhat configuration file for some networks (e.g. Polygon), to successfully execute the transactions (you'll get a gas error).
 
-# Functions
+## Functions
 
-## Common functions
+### Common functions
 
 Functions implemented by all contracts.
 
@@ -129,7 +133,7 @@ In order to implement the function, the contract should derive the `IERC20Receiv
 
 The function can be only called by the owner.
 
-## "NftsSeller" functions
+### "NftsSeller" functions
 
     function createERC721Sale(
         IERC721 nftContract_,
@@ -229,7 +233,7 @@ ___
 
 Get if the token sale with address `nftContract_` and ID `nftId_` is active.
 
-## "NftsRedeemer" functions
+### "NftsRedeemer" functions
 
     function createERC721Redeem(
         address redeemer_,
@@ -323,7 +327,7 @@ ___
 
 Get if the redeem for the token with address `nftContract_` and ID `nftId_` is active.
 
-## "NftsAuction" functions
+### "NftsAuction" functions
 
     function createERC721Auction(
         IERC721 nftContract_,
@@ -336,7 +340,7 @@ Get if the redeem for the token with address `nftContract_` and ID `nftId_` is a
     ) onlyOwner
 
 Create an auction for a ERC721 token with address `nftContract_` and ID `nftId_`. The token shall be owned by the contract.\
-The starting price of the auction is `erc20StartPrice_` amount of the ERC20 token with address `erc20Contract_` 
+The starting price of the auction is `erc20StartPrice_` amount of the ERC20 token with address `erc20Contract_`
 and the minimum bid increment is `erc20MinimumBidIncrement_` of the same token.\
 The auction will last `erc20MinimumBidIncrement_` seconds.
 
@@ -359,7 +363,7 @@ ___
     ) onlyOwner
 
 Create an auction for a ERC1155 token with address `nftContract_`, ID `nftId_` and amount `nftAmount_`. The token shall be owned by the contract.\
-The starting price of the auction is `erc20StartPrice_` amount of the ERC20 token with address `erc20Contract_` 
+The starting price of the auction is `erc20StartPrice_` amount of the ERC20 token with address `erc20Contract_`
 and the minimum bid increment is `erc20MinimumBidIncrement_` of the same token.\
 The auction will last `erc20MinimumBidIncrement_` seconds.
 
@@ -462,3 +466,7 @@ ___
     )
 
 Get if the auction for the token with address `nftContract_` and ID `nftId_` is completed.
+
+# License
+
+This software is available under the MIT license.
