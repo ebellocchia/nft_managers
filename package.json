@@ -2,7 +2,7 @@
   "name": "nft_managers",
   "author": "Emanuele Bellocchia",
   "description": "Smart contracts for selling, redeeming (reserving) and auctioning NFTs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "repository": {
     "type": "git",
