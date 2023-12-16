@@ -34,7 +34,7 @@ async function deploySeller(
 }
 
 async function deployProxy(
-  hre: HardhatRuntimeEnvironment, 
+  hre: HardhatRuntimeEnvironment,
   logic: Contract,
   walletAddr: string
 ) : Promise<Contract> {
@@ -62,7 +62,7 @@ task("deploy-test-tokens", "Deploy mock tokens (ERC20, ERC721, ERC1155)")
     const erc721_contract_factory: ContractFactory = await hre.ethers.getContractFactory("MockERC721Token");
     const erc721_instance: Contract = await erc721_contract_factory.deploy();
     await erc721_instance.deployed();
-  
+
     const erc1155_contract_factory: ContractFactory = await hre.ethers.getContractFactory("MockERC1155Token");
     const erc1155_instance: Contract = await erc1155_contract_factory.deploy();
     await erc1155_instance.deployed();
@@ -150,12 +150,12 @@ task("upgrade-auction-to", "Upgrade auction contract")
     console.log("Deploying new contract logic...");
 
     const auction_logic: Contract = await deployAuction(hre);
-  
+
     console.log("Upgrading contract...");
 
     const proxy_instance: Contract = await (await hre.ethers.getContractFactory("NftsAuction"))
       .attach(taskArgs.proxyAddr);
-    proxy_instance.upgradeTo(auction_logic.address);
+    await proxy_instance.upgradeTo(auction_logic.address);
 
     console.log(`NftsAuction updated logic deployed to ${auction_logic.address}`);
   });
@@ -166,12 +166,12 @@ task("upgrade-redeemer-to", "Upgrade redeemer contract")
     console.log("Deploying new contract logic...");
 
     const redeemer_logic: Contract = await deployRedeemer(hre);
-  
+
     console.log("Upgrading contract...");
 
     const proxy_instance: Contract = await (await hre.ethers.getContractFactory("NftsRedeemer"))
       .attach(taskArgs.proxyAddr);
-    proxy_instance.upgradeTo(redeemer_logic.address);
+    await proxy_instance.upgradeTo(redeemer_logic.address);
 
     console.log(`NftsRedeemer updated logic deployed to ${redeemer_logic.address}`);
   });
@@ -182,12 +182,12 @@ task("upgrade-seller-to", "Upgrade seller contract")
     console.log("Deploying new contract logic...");
 
     const seller_logic: Contract = await deploySeller(hre);
-  
+
     console.log("Upgrading contract...");
 
     const proxy_instance: Contract = await (await hre.ethers.getContractFactory("NftsSeller"))
       .attach(taskArgs.proxyAddr);
-    proxy_instance.upgradeTo(seller_logic.address);
+    await proxy_instance.upgradeTo(seller_logic.address);
 
     console.log(`NftsSeller updated logic deployed to ${seller_logic.address}`);
   });
