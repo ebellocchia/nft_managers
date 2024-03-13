@@ -6,7 +6,7 @@ import {
   getMockERC20TokenContractAt, getMockERC721TokenContractAt, getMockERC1155TokenContractAt
 } from "../common/UtilsCommon";
 import {
-  Auction, AuctionStates, 
+  Auction, AuctionStates,
   AuctionTestContext, initAuctionTestContextAndBid
 } from "./UtilsAuction";
 
@@ -67,7 +67,7 @@ async function testComplete(
     .to.equal(false);
   expect(await auction.isAuctionCompleted(mock_nft.address, nft_id))
     .to.equal(true);
-  
+
   // Check token transfers
   expect(await mock_erc20.balanceOf(owner_address))
     .to.equal(initial_owner_balance.add(auction_data_after.erc20HighestBid));
@@ -93,6 +93,7 @@ async function testNotEnoughBalance(
   user_account: Signer,
   other_address: string
 ) : Promise<void> {
+  const nft_id: number = 0;
   const user_address: string = await user_account.getAddress();
   const balance: BigNumber = await mock_erc20.balanceOf(user_address);
   await mock_erc20
@@ -101,9 +102,14 @@ async function testNotEnoughBalance(
 
   await expect(auction.connect(user_account).completeAuction(
     mock_nft.address,
-    0
+    nft_id
   ))
-    .to.be.revertedWith("ERC20: transfer amount exceeds balance");
+    .to.be.revertedWithCustomError(mock_erc20, "ERC20InsufficientBalance")
+    .withArgs(
+      user_address,
+      await mock_erc20.balanceOf(user_address),
+      (await auction.Auctions(mock_nft.address, nft_id)).erc20HighestBid
+    );
 }
 
 async function testNotExpired(

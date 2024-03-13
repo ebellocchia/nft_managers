@@ -27,7 +27,7 @@ describe("NftsRedeemer.Deploy", () => {
   it("should upgrade the logic", async () => {
     const new_logic: Contract = await deployRedeemerUpgradedContract();
 
-    await expect(await test_ctx.redeemer.upgradeTo(new_logic.address))
+    await expect(await test_ctx.redeemer.upgradeToAndCall(new_logic.address, constants.EMPTY_BYTES))
       .not.to.be.reverted;
 
     test_ctx.redeemer = await getRedeemerUpgradedContractAt(test_ctx.redeemer.address);  // Update ABI
@@ -37,13 +37,13 @@ describe("NftsRedeemer.Deploy", () => {
 
   it("should revert if initializing more than once", async () => {
     await expect(test_ctx.redeemer.init(constants.NULL_ADDRESS))
-      .to.be.revertedWith("Initializable: contract is already initialized");
+      .to.be.revertedWithCustomError(test_ctx.redeemer, "InvalidInitialization");
   });
 
   it("should revert if initializing the logic contract without a proxy", async () => {
     const nft: Contract = await deployRedeemerContract();
     await expect(nft.init(constants.NULL_ADDRESS))
-      .to.be.revertedWith("Initializable: contract is already initialized");
+      .to.be.revertedWithCustomError(test_ctx.redeemer, "InvalidInitialization");
   });
 
   it("should revert if initializing with a null address", async () => {
@@ -53,7 +53,7 @@ describe("NftsRedeemer.Deploy", () => {
       .deploy(
         redeemer_logic_instance.address,
         redeemer_logic_instance.interface.encodeFunctionData(
-          "init", 
+          "init",
           [constants.NULL_ADDRESS]
         )
       )

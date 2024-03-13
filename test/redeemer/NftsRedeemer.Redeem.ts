@@ -18,7 +18,7 @@ async function testRedeemToken(
   const user_address: string = await user_account.getAddress();
   const redeem_data_before: Redeem = await redeemer.Redeems(user_address);
   const mock_erc20: Contract = await getMockERC20TokenContractAt(redeem_data_before.erc20Contract);
-  
+
   const owner_address: string = await owner.getAddress();
   const initial_owner_balance: BigNumber = await mock_erc20.balanceOf(owner_address);
   const initial_user_balance: BigNumber = await mock_erc20.balanceOf(user_address);
@@ -75,6 +75,7 @@ async function testNotEnoughBalance(
   mock_erc20: Contract,
   user_account: Signer,
 ) : Promise<void> {
+  const erc20_amount: number = constants.ERC20_TOKEN_SUPPLY;
   const is_erc721: boolean = await mock_nft.supportsInterface(constants.ERC721_INTERFACE_ID);
   const user_address: string = await user_account.getAddress();
 
@@ -84,7 +85,7 @@ async function testNotEnoughBalance(
       mock_nft.address,
       2,
       mock_erc20.address,
-      constants.ERC20_TOKEN_SUPPLY
+      erc20_amount
     );
   }
   else {
@@ -94,12 +95,13 @@ async function testNotEnoughBalance(
       1,
       1,
       mock_erc20.address,
-      constants.ERC20_TOKEN_SUPPLY
+      erc20_amount
     );
   }
 
   await expect(redeemer.connect(user_account).redeemToken())
-    .to.be.revertedWith("ERC20: transfer amount exceeds balance");
+    .to.be.revertedWithCustomError(mock_erc20, "ERC20InsufficientBalance")
+    .withArgs(user_address, await mock_erc20.balanceOf(user_address), erc20_amount);
 }
 
 describe("NftsRedeemer.Redeem", () => {

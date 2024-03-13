@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 //=============================================================//
 //                            IMPORTS                          //
 //=============================================================//
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "./NftsManagerBase.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC1155} from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import {NftsManagerBase} from "./NftsManagerBase.sol";
 
 
 /**
@@ -311,7 +311,7 @@ contract NftsSeller is
         IERC20 erc20Contract_,
         uint256 erc20Amount_
     )
-        private 
+        private
         notNullAddress(address(erc20Contract_))
     {
         if (nftAmount_ == 0) {
@@ -320,7 +320,7 @@ contract NftsSeller is
         else {
             _validateERC1155(IERC1155(nftContract_), nftId_, nftAmount_);
         }
-    
+
         Sale storage sale = Sales[nftContract_][nftId_];
         if (sale.isActive) {
             revert SaleAlreadyCreatedError(nftContract_, nftId_);
@@ -393,14 +393,14 @@ contract NftsSeller is
 
         if (nftAmount_ == 0) {
             _withdrawERC721(
-                target, 
+                target,
                 IERC721(nftContract_),
                 nftId_
             );
-        } 
+        }
         else {
             _withdrawERC1155(
-                target, 
+                target,
                 IERC1155(nftContract_),
                 nftId_,
                 nftAmount_

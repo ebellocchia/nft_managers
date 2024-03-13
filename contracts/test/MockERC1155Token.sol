@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 //=============================================================//
 //                           IMPORTS                           //
 //=============================================================//
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 
 /**
  * @author Emanuele Bellocchia (ebellocchia@gmail.com)
  * @title  Mock ERC1155 token
  */
-contract MockERC1155Token is 
-    ERC1155 
+contract MockERC1155Token is
+    ERC1155
 {
     //=============================================================//
     //                           CONSTANTS                         //
@@ -58,8 +58,8 @@ contract MockERC1155Token is
      * @param amount_ Token amount
      */
     function mint(
-        address to_, 
-        uint256 id_, 
+        address to_,
+        uint256 id_,
         uint256 amount_
     ) public {
         _mint(to_, id_, amount_, "");

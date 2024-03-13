@@ -2,7 +2,7 @@
   "name": "nft_managers",
   "author": "Emanuele Bellocchia",
   "description": "Smart contracts for selling, redeeming (reserving) and auctioning NFTs",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -40,8 +40,8 @@
     "hardhat-docgen": "^1.3.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.3",
-    "@openzeppelin/contracts-upgradeable": "^4.9.3",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "dotenv": "^16.0.3"
   }
 }

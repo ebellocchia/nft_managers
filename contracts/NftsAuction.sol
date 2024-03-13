@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 //=============================================================//
 //                            IMPORTS                          //
 //=============================================================//
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "./NftsManagerBase.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC1155} from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import {NftsManagerBase} from "./NftsManagerBase.sol";
 
 
 /**
@@ -18,7 +18,7 @@ import "./NftsManagerBase.sol";
  * @notice It allows users to bid a specific ERC20 token amount (usually stable coins) for a ERC721 or ERC1155 NFT.
  *         The auctions are set by the contract owner.
  */
-contract NftsAuction is 
+contract NftsAuction is
     ReentrancyGuard,
     NftsManagerBase
 {
@@ -27,7 +27,7 @@ contract NftsAuction is
     //=============================================================//
 
     /// Auction states
-    enum AuctionStates { 
+    enum AuctionStates {
         INACTIVE,
         ACTIVE,
         COMPLETED
@@ -463,9 +463,9 @@ contract NftsAuction is
         uint256 erc20MinimumBidIncrement_,
         uint256 durationSec_,
         uint256 extendTimeSec_
-    ) 
+    )
         private
-        notNullAddress(address(erc20Contract_)) 
+        notNullAddress(address(erc20Contract_))
         notZeroAmount(erc20MinimumBidIncrement_)
         notZeroAmount(durationSec_)
     {
@@ -555,14 +555,14 @@ contract NftsAuction is
 
         if (nftAmount_ == 0) {
             _withdrawERC721(
-                target, 
+                target,
                 IERC721(nftContract_),
                 nftId_
             );
-        } 
+        }
         else {
             _withdrawERC1155(
-                target, 
+                target,
                 IERC1155(nftContract_),
                 nftId_,
                 nftAmount_

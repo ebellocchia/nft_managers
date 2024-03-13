@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 //=============================================================//
 //                            IMPORTS                          //
 //=============================================================//
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "./NftsManagerBase.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC1155} from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import {NftsManagerBase} from "./NftsManagerBase.sol";
 
 
 /**
@@ -18,7 +18,7 @@ import "./NftsManagerBase.sol";
  * @notice It allows to reserve a ERC721 or ERC1155 token for a specific wallet, which can redeem it by paying in ERC20 tokens (e.g. stablecoins).
  *         The NFTs to be redeemed are set by the contract owner.
  */
-contract NftsRedeemer is 
+contract NftsRedeemer is
     ReentrancyGuard,
     NftsManagerBase
 {
@@ -265,7 +265,7 @@ contract NftsRedeemer is
     //=============================================================//
     //                      INTERNAL FUNCTIONS                     //
     //=============================================================//
-    
+
     /**
      * Initialize the redeem `redeem_`
      * @param redeem_        Redeem structure
@@ -307,10 +307,10 @@ contract NftsRedeemer is
         uint256 nftAmount_,
         IERC20 erc20Contract_,
         uint256 erc20Amount_
-    ) 
-        private 
+    )
+        private
         notNullAddress(redeemer_)
-        notNullAddress(address(erc20Contract_)) 
+        notNullAddress(address(erc20Contract_))
     {
         if (nftAmount_ == 0) {
             _validateERC721(IERC721(nftContract_), nftId_);
@@ -406,14 +406,14 @@ contract NftsRedeemer is
 
         if (nftAmount_ == 0) {
             _withdrawERC721(
-                target, 
+                target,
                 IERC721(nftContract_),
                 nftId_
             );
-        } 
+        }
         else {
             _withdrawERC1155(
-                target, 
+                target,
                 IERC1155(nftContract_),
                 nftId_,
                 nftAmount_

@@ -1,18 +1,19 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 //=============================================================//
 //                           IMPORTS                           //
 //=============================================================//
-import "../IERC20Receiver.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Receiver} from "../IERC20Receiver.sol";
 
 /**
  * @author Emanuele Bellocchia (ebellocchia@gmail.com)
  * @title  Mock ERC20 receiver
  */
-contract MockERC20Receiver is 
-    IERC20Receiver 
+contract MockERC20Receiver is
+    IERC20Receiver
 {
     //=============================================================//
     //                            STORAGE                          //
@@ -29,7 +30,7 @@ contract MockERC20Receiver is
      * Function called by the NFT manager contracts when ERC20 tokens are transferred to
      * payment address.
      * It must return its Solidity selector to confirm the token transfer.
-     * 
+     *
      * @param token_  Token address
      * @param amount_ Token amount
      * @return Function selector, i.e. `IERC20Receiver.onERC20Received.selector`
@@ -45,10 +46,10 @@ contract MockERC20Receiver is
 
 /**
  * @author Emanuele Bellocchia (ebellocchia@gmail.com)
- * @title  Mock ERC20 receiver with `onERC20Received` that returns a wrong value 
+ * @title  Mock ERC20 receiver with `onERC20Received` that returns a wrong value
  */
-contract MockERC20ReceiverRetValErr is 
-    IERC20Receiver 
+contract MockERC20ReceiverRetValErr is
+    IERC20Receiver
 {
     //=============================================================//
     //                          FUNCTIONS                          //
@@ -58,7 +59,7 @@ contract MockERC20ReceiverRetValErr is
      * Function called by the NFT manager contracts when ERC20 tokens are transferred to
      * payment address.
      * It must return its Solidity selector to confirm the token transfer.
-     * 
+     *
      * @param token_  Token address
      * @param amount_ Token amount
      * @return Function selector, i.e. `IERC20Receiver.onERC20Received.selector`
@@ -75,5 +76,5 @@ contract MockERC20ReceiverRetValErr is
  * @author Emanuele Bellocchia (ebellocchia@gmail.com)
  * @title  Mock ERC20 receiver that does not implement `onERC20Received`
  */
-contract MockERC20ReceiverNotImpl 
+contract MockERC20ReceiverNotImpl
 {}

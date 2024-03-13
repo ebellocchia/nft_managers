@@ -1,9 +1,11 @@
 import { expect } from "chai";
+import { Contract, ContractFactory } from "ethers";
+import hre from "hardhat";
 // Project
 import * as constants from "../common/Constants";
 import {
   SellerTestContext,
-  deploySellerContract, deploySellerUpgradedContract, 
+  deploySellerContract, deploySellerUpgradedContract,
   getSellerUpgradedContractAt, initSellerTestContext
 } from "./UtilsSeller";
 
@@ -23,9 +25,9 @@ describe("NftsSeller.Deploy", () => {
   });
 
   it("should upgrade the logic", async () => {
-    const new_logic = await deploySellerUpgradedContract();
+    const new_logic: Contract = await deploySellerUpgradedContract();
 
-    await expect(await test_ctx.seller.upgradeTo(new_logic.address))
+    await expect(await test_ctx.seller.upgradeToAndCall(new_logic.address, constants.EMPTY_BYTES))
       .not.to.be.reverted;
 
     test_ctx.seller = await getSellerUpgradedContractAt(test_ctx.seller.address);  // Update ABI
@@ -35,12 +37,27 @@ describe("NftsSeller.Deploy", () => {
 
   it("should revert if initializing more than once", async () => {
     await expect(test_ctx.seller.init(constants.NULL_ADDRESS))
-      .to.be.revertedWith("Initializable: contract is already initialized");
+      .to.be.revertedWithCustomError(test_ctx.seller, "InvalidInitialization");
   });
 
   it("should revert if initializing the logic contract without a proxy", async () => {
-    const nft = await deploySellerContract();
+    const nft: Contract = await deploySellerContract();
     await expect(nft.init(constants.NULL_ADDRESS))
-      .to.be.revertedWith("Initializable: contract is already initialized");
+      .to.be.revertedWithCustomError(test_ctx.seller, "InvalidInitialization");
+  });
+
+  it("should revert if initializing with a null address", async () => {
+    const seller_logic_instance: Contract = await deploySellerContract();
+    const proxy_contract_factory: ContractFactory = await hre.ethers.getContractFactory("ERC1967Proxy");
+    await expect(proxy_contract_factory
+      .deploy(
+        seller_logic_instance.address,
+        seller_logic_instance.interface.encodeFunctionData(
+          "init",
+          [constants.NULL_ADDRESS]
+        )
+      )
+    )
+      .to.be.revertedWithCustomError(test_ctx.seller, "NullAddressError");
   });
 });

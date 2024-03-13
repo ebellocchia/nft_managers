@@ -155,7 +155,7 @@ task("upgrade-auction-to", "Upgrade auction contract")
 
     const proxy_instance: Contract = await (await hre.ethers.getContractFactory("NftsAuction"))
       .attach(taskArgs.proxyAddr);
-    await proxy_instance.upgradeTo(auction_logic.address);
+    await proxy_instance.upgradeToAndCall(auction_logic.address, "0x");
 
     console.log(`NftsAuction updated logic deployed to ${auction_logic.address}`);
   });
@@ -171,7 +171,7 @@ task("upgrade-redeemer-to", "Upgrade redeemer contract")
 
     const proxy_instance: Contract = await (await hre.ethers.getContractFactory("NftsRedeemer"))
       .attach(taskArgs.proxyAddr);
-    await proxy_instance.upgradeTo(redeemer_logic.address);
+    await proxy_instance.upgradeToAndCall(redeemer_logic.address, "0x");
 
     console.log(`NftsRedeemer updated logic deployed to ${redeemer_logic.address}`);
   });
@@ -187,7 +187,7 @@ task("upgrade-seller-to", "Upgrade seller contract")
 
     const proxy_instance: Contract = await (await hre.ethers.getContractFactory("NftsSeller"))
       .attach(taskArgs.proxyAddr);
-    await proxy_instance.upgradeTo(seller_logic.address);
+    await proxy_instance.upgradeToAndCall(seller_logic.address, "0x");
 
     console.log(`NftsSeller updated logic deployed to ${seller_logic.address}`);
   });

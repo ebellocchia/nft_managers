@@ -1,4 +1,6 @@
 import { expect } from "chai";
+import { Contract, ContractFactory } from "ethers";
+import hre from "hardhat";
 // Project
 import * as constants from "../common/Constants";
 import {
@@ -25,7 +27,7 @@ describe("NftsAuction.Deploy", () => {
   it("should upgrade the logic", async () => {
     const new_logic = await deployAuctionUpgradedContract();
 
-    await expect(await test_ctx.auction.upgradeTo(new_logic.address))
+    await expect(await test_ctx.auction.upgradeToAndCall(new_logic.address, constants.EMPTY_BYTES))
       .not.to.be.reverted;
 
     test_ctx.auction = await getAuctionUpgradedContractAt(test_ctx.auction.address);  // Update ABI
@@ -35,12 +37,27 @@ describe("NftsAuction.Deploy", () => {
 
   it("should revert if initializing more than once", async () => {
     await expect(test_ctx.auction.init(constants.NULL_ADDRESS))
-      .to.be.revertedWith("Initializable: contract is already initialized");
+      .to.be.revertedWithCustomError(test_ctx.auction, "InvalidInitialization");
   });
 
   it("should revert if initializing the logic contract without a proxy", async () => {
     const nft = await deployAuctionContract();
     await expect(nft.init(constants.NULL_ADDRESS))
-      .to.be.revertedWith("Initializable: contract is already initialized");
+      .to.be.revertedWithCustomError(test_ctx.auction, "InvalidInitialization");
+  });
+
+  it("should revert if initializing with a null address", async () => {
+    const seller_logic_instance: Contract = await deployAuctionContract();
+    const proxy_contract_factory: ContractFactory = await hre.ethers.getContractFactory("ERC1967Proxy");
+    await expect(proxy_contract_factory
+      .deploy(
+        seller_logic_instance.address,
+        seller_logic_instance.interface.encodeFunctionData(
+          "init",
+          [constants.NULL_ADDRESS]
+        )
+      )
+    )
+      .to.be.revertedWithCustomError(test_ctx.auction, "NullAddressError");
   });
 });

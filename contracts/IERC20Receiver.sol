@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 //=============================================================//
 //                            IMPORTS                          //
 //=============================================================//
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
  * @author Emanuele Bellocchia (ebellocchia@gmail.com)
@@ -21,7 +21,7 @@ interface IERC20Receiver
      * Function called by NFT manager contracts when ERC20 tokens are transferred to
      * payment address, in case it is a contract.
      * It must return its Solidity selector to confirm the token transfer.
-     * 
+     *
      * @param token_  Token address
      * @param amount_ Token amount
      * @return Function selector, i.e. `IERC20Receiver.onERC20Received.selector`

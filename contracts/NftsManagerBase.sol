@@ -1,20 +1,21 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 //=============================================================//
 //                            IMPORTS                          //
 //=============================================================//
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "./IERC20Receiver.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC1155} from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import {IERC1155Receiver} from "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {IERC20Receiver} from "./IERC20Receiver.sol";
 
 
 /**
@@ -37,14 +38,14 @@ abstract contract NftsManagerBase is
 
     /**
      * Error raised in case of an amount error
-     */ 
+     */
     error AmountError();
 
     /**
      * Error raised in case of a NFT error
      * @param nftContract NFT contract address
      * @param nftId       NFT ID
-     */ 
+     */
     error NftError(
         address nftContract,
         uint256 nftId
@@ -59,7 +60,7 @@ abstract contract NftsManagerBase is
      * Error raised in case of a withdraw error
      * @param nftContract NFT contract address
      * @param nftId       NFT ID
-     */ 
+     */
     error WithdrawError(
         address nftContract,
         uint256 nftId
@@ -67,12 +68,12 @@ abstract contract NftsManagerBase is
 
     /**
      * Error raised in case the onERC20Received function returns the wrong value
-     */ 
+     */
     error IERC20ReceiverRetValError();
 
     /**
      * Error raised in case the onERC20Received function is not implemented
-     */ 
+     */
     error IERC20ReceiverNotImplError();
 
     //=============================================================//
@@ -175,7 +176,7 @@ abstract contract NftsManagerBase is
     function init(
         address paymentERC20Address_
     ) public initializer {
-        __Ownable_init();
+        __Ownable_init(_msgSender());
         __setPaymentERC20Address(paymentERC20Address_);
     }
 
@@ -220,7 +221,7 @@ abstract contract NftsManagerBase is
             revert NftError(
                 address(nftContract_),
                 nftId_
-            );  
+            );
         }
     }
 
@@ -262,8 +263,8 @@ abstract contract NftsManagerBase is
         notNullAddress(address(nftContract_))
     {
         nftContract_.safeTransferFrom(
-            nftContract_.ownerOf(nftId_), 
-            target_, 
+            nftContract_.ownerOf(nftId_),
+            target_,
             nftId_
         );
 
@@ -293,7 +294,7 @@ abstract contract NftsManagerBase is
     {
         nftContract_.safeTransferFrom(
             address(this),
-            target_, 
+            target_,
             nftId_,
             nftAmount_,
             ""
@@ -330,8 +331,8 @@ abstract contract NftsManagerBase is
             erc20Amount_
         );
         nftContract_.safeTransferFrom(
-            address(this), 
-            user_, 
+            address(this),
+            user_,
             nftId_
         );
     }
@@ -362,7 +363,7 @@ abstract contract NftsManagerBase is
         );
         nftContract_.safeTransferFrom(
             address(this),
-            user_, 
+            user_,
             nftId_,
             nftAmount_,
             ""
@@ -404,7 +405,7 @@ abstract contract NftsManagerBase is
             erc20Amount_
         );
 
-        if (paymentERC20Address.isContract()) {
+        if (paymentERC20Address.code.length > 0) {
             try IERC20Receiver(paymentERC20Address).onERC20Received(erc20Contract_, erc20Amount_) returns (bytes4 ret) {
                 if (ret != IERC20Receiver.onERC20Received.selector) {
                     revert IERC20ReceiverRetValError();

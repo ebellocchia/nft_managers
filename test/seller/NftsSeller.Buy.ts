@@ -90,7 +90,7 @@ describe("NftsSeller.Buy", () => {
 
     expect(await test_ctx.seller.isSaleActive(test_ctx.mock_erc1155.address, nft_id))
       .to.equal(true);
-  
+
     // Check token transfers
     expect(await mock_erc20.balanceOf(owner_address))
       .to.equal(initial_owner_balance.add(token_price_1));
@@ -102,7 +102,7 @@ describe("NftsSeller.Buy", () => {
     // Buy again the remaining amount to reset the sale
     const nft_amount_remaining: number = constants.ERC1155_TOKEN_AMOUNT - nft_amount_bought;
     const token_price_2: BigNumber = sale_data_after_1.erc20Amount.mul(nft_amount_remaining);
-  
+
     await test_ctx.seller.connect(test_ctx.user_1_account).buyERC1155(
       test_ctx.mock_erc1155.address,
       nft_id,
@@ -129,18 +129,30 @@ describe("NftsSeller.Buy", () => {
   });
 
   it("should revert if buying a token with not enough balance", async () => {
+    const nft_id: number = 0;
+
     await expect(test_ctx.seller.connect(test_ctx.user_3_account).buyERC721(
       test_ctx.mock_erc721.address,
-      0
+      nft_id
     ))
-      .to.be.revertedWith("ERC20: transfer amount exceeds balance");
+      .to.be.revertedWithCustomError(test_ctx.mock_erc20, "ERC20InsufficientBalance")
+      .withArgs(
+        test_ctx.user_3_address,
+        await test_ctx.mock_erc20.balanceOf(test_ctx.user_3_address),
+        (await test_ctx.seller.Sales(test_ctx.mock_erc721.address, nft_id)).erc20Amount
+      );
 
     await expect(test_ctx.seller.connect(test_ctx.user_3_account).buyERC1155(
         test_ctx.mock_erc1155.address,
-        0,
+        nft_id,
         1
       ))
-        .to.be.revertedWith("ERC20: transfer amount exceeds balance");
+        .to.be.revertedWithCustomError(test_ctx.mock_erc20, "ERC20InsufficientBalance")
+        .withArgs(
+          test_ctx.user_3_address,
+          await test_ctx.mock_erc20.balanceOf(test_ctx.user_3_address),
+          (await test_ctx.seller.Sales(test_ctx.mock_erc721.address, nft_id)).erc20Amount
+        );
   });
 
   it("should revert if buying a ERC1155 token with invalid amount", async () => {

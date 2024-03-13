@@ -73,7 +73,6 @@ export async function initTokens(
   const owner_address = await accounts.owner.getAddress();
   const user_1_address = await user_1.getAddress();
   const user_2_address = await user_2.getAddress();
-  const user_3_address = await user_3.getAddress();
 
   // Approve ERC20 tokens for users
   await erc20Token
